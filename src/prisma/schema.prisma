@@ -1,0 +1,48 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Event {
+  id            Int             @id @default(autoincrement())
+  title         String
+  description   String?         @db.Text
+  link          String
+  closed        DateTime?
+  categories    Category[]      @relation("EventCategory")
+  geometries    Geometry[]
+  EventCategory EventCategory[]
+}
+
+model Category {
+  id            Int             @id @default(autoincrement())
+  categoryId    String
+  title         String
+  events        Event[]         @relation("EventCategory")
+  EventCategory EventCategory[]
+}
+
+model EventCategory {
+  eventId    Int
+  categoryId Int
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, categoryId])
+}
+
+model Geometry {
+  id             Int      @id @default(autoincrement())
+  eventId        Int
+  magnitudeValue Float
+  magnitudeUnit  String
+  date           DateTime
+  type           String
+  latitude       Float
+  longitude      Float
+  event          Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
