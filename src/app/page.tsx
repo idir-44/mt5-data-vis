@@ -23,7 +23,7 @@ const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen w-full p-0 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-gray-50 dark:bg-gray-900">
+    <div className="flex grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen w-full p-0 gap-16 font-[family-name:var(--font-geist-sans)] bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <header className="w-full flex justify-between items-center py-4 px-8 bg-white dark:bg-gray-800 shadow-md">
         {/* Logo */}
@@ -70,19 +70,8 @@ export default function Home() {
                 </NavigationMenuLink>
               </NavigationMenuContent>
             </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="text-gray-700 dark:text-white">
-                Visualisations
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink>
-                  <Link href="/charts">Voir les graphiques</Link>
-                </NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <Map />
 
         {/* Example Content */}
         <div className="text-center w-full">
@@ -95,6 +84,7 @@ export default function Home() {
           </p>
         </div>
       </main>
+      <Map />
 
       {/* Footer */}
       <footer className="w-full bg-white dark:bg-gray-800 py-6 px-8 mt-16 shadow-md">
