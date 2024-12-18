@@ -18,6 +18,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
+import dynamic from "next/dynamic";
+const Map = dynamic(() => import("../components/Map"), { ssr: false });
+
 export default function Home() {
   return (
     <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen w-full p-0 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-gray-50 dark:bg-gray-900">
@@ -79,6 +82,7 @@ export default function Home() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+        <Map />
 
         {/* Example Content */}
         <div className="text-center w-full">
