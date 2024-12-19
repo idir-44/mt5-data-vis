@@ -4,14 +4,14 @@ import (
 	"time"
 )
 
-type Events struct {
+type EventsResponse struct {
 	Title       string
 	Description string
 	Link        string
-	Events      []Event
+	Events      []EventResponse
 }
 
-type Geometry struct {
+type GeometryResponse struct {
 	ID      string
 	EventID string
 	Date    time.Time
@@ -20,18 +20,48 @@ type Geometry struct {
 	Coordinates []float64
 }
 
-type Event struct {
+type EventResponse struct {
 	ID          string
 	EONETID     string
 	Title       string
 	Description string
 	Link        string
-	Categories  []Category
-	Category    string
-	Geometries  []Geometry
+	Categories  []CategoryResponse
+	Geometries  []GeometryResponse
 }
 
-type Category struct {
+type CategoryResponse struct {
 	ID    int64
 	Title string
+}
+
+type Event struct {
+	ID          string
+	EonetID     string
+	Title       string
+	Description string
+	Link        string
+	Category    string
+}
+
+type Geometries struct {
+	ID        string
+	EventID   string
+	Date      time.Time
+	Type      string
+	Latitude  float64
+	Longitude float64
+}
+
+type InternalEventResponse struct {
+	ID          string
+	EonetID     string
+	Title       string
+	Description string
+	Link        string
+	Category    string
+
+	Date      time.Time
+	Latitude  float64
+	Longitude float64
 }
