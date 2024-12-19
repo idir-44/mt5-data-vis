@@ -1,6 +1,6 @@
 // components/Map.tsx
 "use client";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
@@ -20,19 +20,33 @@ type Catastrophe = {
   longitude: number;
 };
 
-const Map = () => {
-  const [data, setData] = useState<Catastrophe[]>([]);
+type City = {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  population: number;
+};
 
-  // Simuler la récupération des données depuis une API ou base de données
+const Map = () => {
+  const [catastrophes, setCatastrophes] = useState<Catastrophe[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
+
   useEffect(() => {
-    // Exemple de données fictives
     const fetchData = async () => {
-      const fakeData = [
+      const fakeCatastrophes = [
         { id: "1", name: "Ouragan Sandy", latitude: 40.7128, longitude: -74.006 },
         { id: "2", name: "Tremblement de terre", latitude: 34.0522, longitude: -118.2437 },
         { id: "3", name: "Feu de forêt", latitude: 37.7749, longitude: -122.4194 },
       ];
-      setData(fakeData);
+      setCatastrophes(fakeCatastrophes);
+
+      const fakeCities = [
+        { id: "1", name: "New York", latitude: 40.7128, longitude: -74.006, population: 8419600 },
+        { id: "2", name: "Los Angeles", latitude: 34.0522, longitude: -118.2437, population: 3980400 },
+        { id: "3", name: "San Francisco", latitude: 37.7749, longitude: -122.4194, population: 883305 },
+      ];
+      setCities(fakeCities);
     };
     fetchData();
   }, []);
@@ -43,12 +57,25 @@ const Map = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      {data.map((catastrophe) => (
+      {catastrophes.map((catastrophe) => (
         <Marker key={catastrophe.id} position={[catastrophe.latitude, catastrophe.longitude]}>
           <Popup>
             <strong>{catastrophe.name}</strong>
           </Popup>
         </Marker>
+      ))}
+      {cities.map((city) => (
+        <Circle
+          key={city.id}
+          center={[city.latitude, city.longitude]}
+          radius={city.population / 100}
+          pathOptions={{ color: "blue", fillColor: "blue", fillOpacity: 0.4 }}
+        >
+          <Popup>
+            <strong>{city.name}</strong><br />
+            Population: {city.population.toLocaleString()}
+          </Popup>
+        </Circle>
       ))}
     </MapContainer>
   );
