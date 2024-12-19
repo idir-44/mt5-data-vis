@@ -21,3 +21,24 @@ func (r repository) CreateEvents(events []models.Event, geometries []models.Geom
 
 	return err
 }
+
+func (r repository) GetEvents() ([]models.InternalEventResponse, error) {
+	events := []models.InternalEventResponse{}
+
+	query := r.db.NewSelect().ModelTableExpr("events")
+
+	query.Join("INNER JOIN geometries ON geometries.event_id = events.id")
+
+	query.Column("events.id")
+	query.Column("eonet_id")
+	query.Column("description")
+	query.Column("link")
+	query.Column("category")
+	query.Column("date")
+	query.Column("latitude")
+	query.Column("longitude")
+
+	err := query.Scan(context.TODO(), &events)
+
+	return events, err
+}

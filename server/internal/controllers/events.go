@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (r controller) getEvents(c echo.Context) error {
+func (r controller) getNasaEvents(c echo.Context) error {
 
 	events := models.EventsResponse{}
 	client := http.Client{}
@@ -49,6 +49,17 @@ func (r controller) getEvents(c echo.Context) error {
 	}
 
 	err = r.repository.CreateEvents(newEvents, geometries)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, events)
+
+}
+
+func (r controller) getEvents(c echo.Context) error {
+
+	events, err := r.repository.GetEvents()
 	if err != nil {
 		return err
 	}

@@ -15,4 +15,5 @@ func NewRepository(db *bun.DB) Repository {
 
 type Repository interface {
 	CreateEvents(events []models.Event, geometries []models.Geometries) error
+	GetEvents() ([]models.InternalEventResponse, error)
 }
