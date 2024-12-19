@@ -20,9 +20,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 const Map = dynamic(() => import("./components/Map"), { ssr: false });
 const Graph = dynamic(() => import("./components/Graph"), { ssr: false });
@@ -33,13 +33,14 @@ export default function Home() {
 
   const handlePopulationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const populationMax = e.target.value;
-    const queryParams = new URLSearchParams(window.location.search);
+
+    const queryParams = new URLSearchParams();
     if (populationMax) {
-      queryParams.set("populationMax", populationMax);
+      queryParams.set("lte", populationMax);
     } else {
-      queryParams.delete("populationMax");
+      queryParams.delete("lte");
     }
-    router.push(`/?${queryParams.toString()}`);
+    router.push(`/?${queryParams.toString()}`);  // Update the URL with the query parameter
   };
 
   return (
@@ -78,7 +79,7 @@ export default function Home() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="wildfire">Wildfire</SelectItem>
-              <SelectItem value="earthquakes">Earthquakes</SelectItem>
+              <SelectItem value="sea-and-lake-ice">Sea and Lake Ice</SelectItem>
               <SelectItem value="severeStorms">Severe Storms</SelectItem>
               <SelectItem value="volcanoes">Volcanoes</SelectItem>
             </SelectContent>
@@ -98,6 +99,7 @@ export default function Home() {
         {view === "map" && <Map />}
         {view === "graph" && <Graph />}
       </main>
+
 
       <footer className="w-full bg-white dark:bg-gray-800 py-6 px-8 mt-16 shadow-md">
         <div className="flex justify-between items-center">

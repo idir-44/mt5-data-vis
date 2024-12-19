@@ -35,7 +35,7 @@ type City = {
 
 const Map = () => {
   const searchParams = useSearchParams();
-  const populationMax = searchParams.get("populationMax");
+  const populationMax = searchParams.get("lte");
   const [catastrophes, setCatastrophes] = useState<Catastrophe[]>([]);
   const [cities, setCities] = useState<City[]>([]);
 
@@ -86,7 +86,6 @@ const Map = () => {
 
     fetchCatastrophes();
     fetchCities();
-
   }, [populationMax]);  
 
   return (
