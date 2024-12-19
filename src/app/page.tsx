@@ -34,7 +34,7 @@ export default function Home() {
     if (populationMax) {
       queryParams.set("lte", populationMax);
     } else {
-      queryParams.delete("populationMax");
+      queryParams.delete("lte");
     }
     router.push(`/?${queryParams.toString()}`);  // Update the URL with the query parameter
   };
