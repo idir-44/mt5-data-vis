@@ -1,11 +1,9 @@
-// components/Map.tsx
 "use client";
-import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Circle, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
 
-// Correction des icônes Leaflet pour Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
@@ -14,18 +12,24 @@ L.Icon.Default.mergeOptions({
 });
 
 type Catastrophe = {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
+  ID: string;
+  EonetID: string;
+  Title: string;
+  Description: string;
+  Link: string;
+  Category: string;
+  Date: string;
+  Latitude: number;
+  Longitude: number;
 };
 
 type City = {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  population: number;
+  ID: string;
+  CommonName: string;
+  OfficialName: string;
+  Latitude: number;
+  Longitude: number;
+  Population: number;
 };
 
 const Map = () => {
@@ -33,22 +37,47 @@ const Map = () => {
   const [cities, setCities] = useState<City[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const fakeCatastrophes = [
-        { id: "1", name: "Ouragan Sandy", latitude: 40.7128, longitude: -74.006 },
-        { id: "2", name: "Tremblement de terre", latitude: 34.0522, longitude: -118.2437 },
-        { id: "3", name: "Feu de forêt", latitude: 37.7749, longitude: -122.4194 },
-      ];
-      setCatastrophes(fakeCatastrophes);
-
-      const fakeCities = [
-        { id: "1", name: "New York", latitude: 40.7128, longitude: -74.006, population: 8419600 },
-        { id: "2", name: "Los Angeles", latitude: 34.0522, longitude: -118.2437, population: 3980400 },
-        { id: "3", name: "San Francisco", latitude: 37.7749, longitude: -122.4194, population: 883305 },
-      ];
-      setCities(fakeCities);
+    const fetchCatastrophes = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/v1/events");
+        const data = await response.json();
+        const formattedCatastrophes = data.map((item: any) => ({
+          ID: item.ID,
+          EonetID: item.EonetID,
+          Title: item.Title || "Catastrophe sans titre",
+          Description: item.Description || "Aucune description",
+          Link: item.Link,
+          Category: item.Category,
+          Date: item.Date,
+          Latitude: item.Latitude,
+          Longitude: item.Longitude,
+        }));
+        setCatastrophes(formattedCatastrophes);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des catastrophes:", error);
+      }
     };
-    fetchData();
+
+    const fetchCities = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/v1/populations");
+        const data = await response.json();
+        const formattedCities = data.map((item: any) => ({
+          ID: item.ID,
+          CommonName: item.CommonName,
+          OfficialName: item.OfficialName,
+          Latitude: item.Latitude,
+          Longitude: item.Longitude,
+          Population: item.Population,
+        }));
+        setCities(formattedCities);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des villes:", error);
+      }
+    };
+
+    fetchCatastrophes();
+    fetchCities();
   }, []);
 
   return (
@@ -58,22 +87,24 @@ const Map = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       {catastrophes.map((catastrophe) => (
-        <Marker key={catastrophe.id} position={[catastrophe.latitude, catastrophe.longitude]}>
+        <Marker key={catastrophe.ID} position={[catastrophe.Latitude, catastrophe.Longitude]}>
           <Popup>
-            <strong>{catastrophe.name}</strong>
+            <strong>{catastrophe.Category}</strong><br />
+            <a href={catastrophe.Link} target="_blank" rel="noopener noreferrer">Voir les détails</a><br />
+            <em>{catastrophe.Date}</em>
           </Popup>
         </Marker>
       ))}
       {cities.map((city) => (
         <Circle
-          key={city.id}
-          center={[city.latitude, city.longitude]}
-          radius={city.population / 100}
+          key={city.ID}
+          center={[city.Latitude, city.Longitude]}
+          radius={city.Population / 10000}
           pathOptions={{ color: "blue", fillColor: "blue", fillOpacity: 0.4 }}
         >
           <Popup>
-            <strong>{city.name}</strong><br />
-            Population: {city.population.toLocaleString()}
+            <strong>{city.CommonName}</strong><br />
+            Population: {city.Population.toLocaleString()}
           </Popup>
         </Circle>
       ))}
