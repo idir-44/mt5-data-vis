@@ -16,19 +16,19 @@ func init() {
 	CREATE TABLE events (
 		id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     eonet_id VARCHAR(255) UNIQUE NOT NULL,
-    title TEXT NOT NULL,
+    title VARCHAR(255),
     description TEXT,
-    link TEXT NOT NULL UNIQUE,
-    category TEXT NOT NULL
+    link TEXT,
+    category TEXT 
   );
 
 	CREATE TABLE geometries (
 		id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     event_id UUID NOT NULL,
-    date TIMESTAMP NOT NULL,
-    type VARCHAR(50) NOT NULL,
-    latitude FLOAT NOT NULL,
-    longitude FLOAT NOT NULL,
+    date TIMESTAMP,
+    type VARCHAR(50),
+    latitude FLOAT,
+    longitude FLOAT,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 	);
 	`}
