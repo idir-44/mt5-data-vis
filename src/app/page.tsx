@@ -32,7 +32,7 @@ export default function Home() {
     const populationMax = e.target.value;
     const queryParams = new URLSearchParams();
     if (populationMax) {
-      queryParams.set("populationMax", populationMax);
+      queryParams.set("lte", populationMax);
     } else {
       queryParams.delete("populationMax");
     }
