@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { ModeToggle } from "./components/ModeToggle";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,22 +56,18 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full">
-        {/* Navigation Menu */}
-        <NavigationMenu>
-          <NavigationMenuList className="flex gap-4">
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="text-gray-700 dark:text-white">
-                Documentation
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink>
-                  <Link href="/docs">Voir la documentation</Link>
-                </NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+      <main className="flex flex-col gap-8 row-start-2 items-end sm:items-end w-full p-4">
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Catégorie" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="wildfire">Wildfire</SelectItem>
+            <SelectItem value="earthquakes">Earthquakes</SelectItem>
+            <SelectItem value="severeStorms">Severe Storms</SelectItem>
+          </SelectContent>
+        </Select>
+
 
         {/* Example Content */}
         <div className="text-center w-full">
