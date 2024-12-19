@@ -51,7 +51,13 @@ func (r controller) getCountriesPopulation(c echo.Context) error {
 
 func (r controller) getPopulations(c echo.Context) error {
 
-	populations, err := r.repository.GetPopulations()
+	query := models.GetPopulationsRequest{}
+
+	if err := c.Bind(&query); err != nil {
+		return err
+	}
+
+	populations, err := r.repository.GetPopulations(query)
 	if err != nil {
 		return err
 	}

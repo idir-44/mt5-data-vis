@@ -19,3 +19,8 @@ type Population struct {
 	Longitude    float64
 	Population   int64
 }
+
+type GetPopulationsRequest struct {
+	Gte int64 `query:"gte"`
+	Lte int64 `query:"lte"`
+}

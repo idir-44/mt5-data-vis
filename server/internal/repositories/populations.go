@@ -14,10 +14,18 @@ func (r repository) CreatePopulations(populations []models.Population) error {
 
 }
 
-func (r repository) GetPopulations() ([]models.Population, error) {
+func (r repository) GetPopulations(req models.GetPopulationsRequest) ([]models.Population, error) {
 	populations := []models.Population{}
 
-	err := r.db.NewSelect().Model(&populations).Scan(context.TODO())
+	query := r.db.NewSelect().Model(&populations)
+
+	if req.Gte != 0 {
+		query.Where("population >= ?", req.Gte)
+	} else if req.Lte != 0 {
+		query.Where("population <= ?", req.Lte)
+	}
+
+	err := query.Scan(context.TODO())
 
 	return populations, err
 
