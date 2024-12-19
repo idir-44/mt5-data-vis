@@ -13,5 +13,7 @@ func RegisterHandlers(routerGroup *server.Router, repo repositories.Repository) 
 	c := controller{repo}
 
 	routerGroup.GET("/nasa-events", c.getNasaEvents)
+	routerGroup.GET("/countries-population", c.getCountriesPopulation)
 	routerGroup.GET("/events", c.getEvents)
+	routerGroup.GET("/populations", c.getPopulations)
 }

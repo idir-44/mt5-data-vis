@@ -16,4 +16,6 @@ func NewRepository(db *bun.DB) Repository {
 type Repository interface {
 	CreateEvents(events []models.Event, geometries []models.Geometries) error
 	GetEvents() ([]models.InternalEventResponse, error)
+	CreatePopulations(populations []models.Population) error
+	GetPopulations() ([]models.Population, error)
 }
