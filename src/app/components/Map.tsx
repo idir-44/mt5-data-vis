@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Circle, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -33,6 +34,8 @@ type City = {
 };
 
 const Map = () => {
+  const searchParams = useSearchParams();
+  const populationMax = searchParams.get("populationMax");  // Get populationMax from URL
   const [catastrophes, setCatastrophes] = useState<Catastrophe[]>([]);
   const [cities, setCities] = useState<City[]>([]);
 
@@ -60,7 +63,11 @@ const Map = () => {
 
     const fetchCities = async () => {
       try {
-        const response = await fetch("http://localhost:8080/v1/populations");
+        const url = new URL("http://localhost:8080/v1/populations");
+        if (populationMax) {
+          url.searchParams.append("lte", populationMax);  // Add population filter
+        }
+        const response = await fetch(url.toString());
         const data = await response.json();
         const formattedCities = data.map((item: any) => ({
           ID: item.ID,
@@ -70,7 +77,7 @@ const Map = () => {
           Longitude: item.Longitude,
           Population: item.Population,
         }));
-        setCities(formattedCities);
+        setCities(formattedCities);  // Update cities
       } catch (error) {
         console.error("Erreur lors de la récupération des villes:", error);
       }
@@ -78,7 +85,7 @@ const Map = () => {
 
     fetchCatastrophes();
     fetchCities();
-  }, []);
+  }, [populationMax]);  // Re-run when populationMax changes
 
   return (
     <MapContainer center={[40.7128, -74.006]} zoom={5} style={{ height: "500px", width: "100%" }}>
