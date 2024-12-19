@@ -35,7 +35,7 @@ type City = {
 
 const Map = () => {
   const searchParams = useSearchParams();
-  const populationMax = searchParams.get("populationMax");  // Get populationMax from URL
+  const populationMax = searchParams.get("populationMax");
   const [catastrophes, setCatastrophes] = useState<Catastrophe[]>([]);
   const [cities, setCities] = useState<City[]>([]);
 
@@ -65,7 +65,7 @@ const Map = () => {
       try {
         const url = new URL("http://localhost:8080/v1/populations");
         if (populationMax) {
-          url.searchParams.append("lte", populationMax);  // Add population filter
+          url.searchParams.append("lte", populationMax);
         }
         const response = await fetch(url.toString());
         const data = await response.json();
@@ -77,7 +77,7 @@ const Map = () => {
           Longitude: item.Longitude,
           Population: item.Population,
         }));
-        setCities(formattedCities);  // Update cities
+        setCities(formattedCities);
       } catch (error) {
         console.error("Erreur lors de la récupération des villes:", error);
       }
@@ -85,7 +85,7 @@ const Map = () => {
 
     fetchCatastrophes();
     fetchCities();
-  }, [populationMax]);  // Re-run when populationMax changes
+  }, [populationMax]);  
 
   return (
     <MapContainer center={[40.7128, -74.006]} zoom={5} style={{ height: "500px", width: "100%" }}>
