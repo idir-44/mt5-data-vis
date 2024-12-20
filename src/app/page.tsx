@@ -66,25 +66,27 @@ export default function Home() {
       </header>
 
       <main className="flex flex-col gap-8 row-start-2 items-end sm:items-end w-full p-4">
-        <div className="flex flex-col sm:flex-row justify-end items-end gap-4 w-full">
-          <Input
-            className="flex-grow sm:flex-none w-full sm:w-40 h-10 p-2 text-sm border rounded-md"
-            type="number"
-            placeholder="Population max"
-            onChange={handlePopulationChange}
-          />
-          <Select>
-            <SelectTrigger className="flex-grow sm:flex-none w-full sm:w-[180px] h-10">
-              <SelectValue placeholder="Catégorie" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="wildfire">Wildfire</SelectItem>
-              <SelectItem value="sea-and-lake-ice">Sea and Lake Ice</SelectItem>
-              <SelectItem value="severeStorms">Severe Storms</SelectItem>
-              <SelectItem value="volcanoes">Volcanoes</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {view === "map" && (
+          <div className="flex flex-col sm:flex-row justify-end items-end gap-4 w-full">
+            <Input
+              className="flex-grow sm:flex-none w-full sm:w-40 h-10 p-2 text-sm border rounded-md"
+              type="number"
+              placeholder="Population max"
+              onChange={handlePopulationChange}
+            />
+            <Select>
+              <SelectTrigger className="flex-grow sm:flex-none w-full sm:w-[180px] h-10">
+                <SelectValue placeholder="Catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="wildfire">Wildfire</SelectItem>
+                <SelectItem value="sea-and-lake-ice">Sea and Lake Ice</SelectItem>
+                <SelectItem value="severeStorms">Severe Storms</SelectItem>
+                <SelectItem value="volcanoes">Volcanoes</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <div className="text-center w-full">
           <h1 className="text-4xl font-bold text-gray-400 dark:text-white">
@@ -96,9 +98,10 @@ export default function Home() {
           </p>
         </div>
 
-        {view === "map" && <Map />}
-        {view === "graph" && <Graph />}
+          {view === "map" && <Map />}
+          {view === "graph" && <Graph />}
       </main>
+
 
 
       <footer className="w-full bg-white dark:bg-gray-800 py-6 px-8 mt-16 shadow-md">
