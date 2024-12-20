@@ -22,23 +22,49 @@ import Link from "next/link";
 
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Map = dynamic(() => import("./components/Map"), { ssr: false });
 const Graph = dynamic(() => import("./components/Graph"), { ssr: false });
 
 export default function Home() {
   const [view, setView] = useState("map");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/v1/events-categories");
+        const data = await response.json();
+        setCategories(Array.from(new Set(data)));
+      } catch (error) {
+        console.error("Erreur lors de la récupération des catégories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handlePopulationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const populationMax = e.target.value;
-
     const queryParams = new URLSearchParams();
     if (populationMax) {
       queryParams.set("lte", populationMax);
     } else {
       queryParams.delete("lte");
+    }
+    router.push(`/?${queryParams.toString()}`);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    const queryParams = new URLSearchParams();
+    if (category) {
+      queryParams.set("category", category);
+    } else {
+      queryParams.delete("category");
     }
     router.push(`/?${queryParams.toString()}`);
   };
@@ -74,15 +100,16 @@ export default function Home() {
               placeholder="Population max"
               onChange={handlePopulationChange}
             />
-            <Select>
+            <Select onValueChange={handleCategoryChange}>
               <SelectTrigger className="flex-grow sm:flex-none w-full sm:w-[180px] h-10">
                 <SelectValue placeholder="Catégorie" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="wildfire">Wildfire</SelectItem>
-                <SelectItem value="sea-and-lake-ice">Sea and Lake Ice</SelectItem>
-                <SelectItem value="severeStorms">Severe Storms</SelectItem>
-                <SelectItem value="volcanoes">Volcanoes</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -98,20 +125,28 @@ export default function Home() {
           </p>
         </div>
 
-          {view === "map" && <Map />}
-          {view === "graph" && <Graph />}
+        {view === "map" && <Map category={selectedCategory} />}
+        {view === "graph" && <Graph />}
       </main>
-
-
 
       <footer className="w-full bg-white dark:bg-gray-800 py-6 px-8 mt-16 shadow-md">
         <div className="flex justify-between items-center">
           <p className="text-gray-500 dark:text-gray-400">© 2024 Groupe 16, Hetic. Tous droits réservés.</p>
           <div className="flex gap-4">
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-white hover:underline">
+            <a
+              href="https://www.linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-white hover:underline"
+            >
               LinkedIn
             </a>
-            <a href="https://www.github.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-white hover:underline">
+            <a
+              href="https://www.github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 dark:text-white hover:underline"
+            >
               GitHub
             </a>
           </div>
