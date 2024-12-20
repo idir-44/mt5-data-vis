@@ -22,7 +22,7 @@ func (r repository) CreateEvents(events []models.Event, geometries []models.Geom
 	return err
 }
 
-func (r repository) GetEvents() ([]models.InternalEventResponse, error) {
+func (r repository) GetEvents(req models.GetEventsRequest) ([]models.InternalEventResponse, error) {
 	events := []models.InternalEventResponse{}
 
 	query := r.db.NewSelect().ModelTableExpr("events")
@@ -38,7 +38,25 @@ func (r repository) GetEvents() ([]models.InternalEventResponse, error) {
 	query.Column("latitude")
 	query.Column("longitude")
 
+	if req.Category != "" {
+		query.Where("category = ? ", req.Category)
+	}
+
 	err := query.Scan(context.TODO(), &events)
 
 	return events, err
+}
+
+func (r repository) GetEventsCategories() ([]string, error) {
+
+	categories := []string{}
+
+	query := r.db.NewSelect().ModelTableExpr("events")
+
+	query.Column("category")
+
+	err := query.Scan(context.TODO(), &categories)
+
+	return categories, err
+
 }

@@ -59,11 +59,28 @@ func (r controller) getNasaEvents(c echo.Context) error {
 
 func (r controller) getEvents(c echo.Context) error {
 
-	events, err := r.repository.GetEvents()
+	query := models.GetEventsRequest{}
+
+	if err := c.Bind(&query); err != nil {
+		return err
+	}
+
+	events, err := r.repository.GetEvents(query)
 	if err != nil {
 		return err
 	}
 
 	return c.JSON(http.StatusOK, events)
+
+}
+
+func (r controller) getEventsCategories(c echo.Context) error {
+
+	categories, err := r.repository.GetEventsCategories()
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, categories)
 
 }

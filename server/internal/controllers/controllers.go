@@ -16,4 +16,5 @@ func RegisterHandlers(routerGroup *server.Router, repo repositories.Repository) 
 	routerGroup.GET("/countries-population", c.getCountriesPopulation)
 	routerGroup.GET("/events", c.getEvents)
 	routerGroup.GET("/populations", c.getPopulations)
+	routerGroup.GET("/events-categories", c.getEventsCategories)
 }
