@@ -65,3 +65,7 @@ type InternalEventResponse struct {
 	Latitude  float64
 	Longitude float64
 }
+
+type GetEventsRequest struct {
+	Category string `query:"category"`
+}
