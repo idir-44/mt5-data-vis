@@ -40,7 +40,7 @@ export default function Home() {
     } else {
       queryParams.delete("lte");
     }
-    router.push(`/?${queryParams.toString()}`);  // Update the URL with the query parameter
+    router.push(`/?${queryParams.toString()}`);
   };
 
   return (
