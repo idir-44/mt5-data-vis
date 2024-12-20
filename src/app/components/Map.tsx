@@ -33,7 +33,7 @@ type City = {
   Population: number;
 };
 
-const Map = () => {
+const Map = ({ category }: { category: string | null }) => {
   const searchParams = useSearchParams();
   const populationMax = searchParams.get("lte");
   const [catastrophes, setCatastrophes] = useState<Catastrophe[]>([]);
@@ -42,7 +42,10 @@ const Map = () => {
   useEffect(() => {
     const fetchCatastrophes = async () => {
       try {
-        const response = await fetch("http://localhost:8080/v1/events");
+        const url = category
+          ? `http://localhost:8080/v1/events?category=${category}`
+          : "http://localhost:8080/v1/events";
+        const response = await fetch(url);
         const data = await response.json();
         const formattedCatastrophes = data.map((item: any) => ({
           ID: item.ID,
@@ -86,7 +89,7 @@ const Map = () => {
 
     fetchCatastrophes();
     fetchCities();
-  }, [populationMax]);  
+  }, [populationMax, category]);
 
   return (
     <MapContainer center={[40.7128, -74.006]} zoom={5} style={{ height: "500px", width: "100%" }}>

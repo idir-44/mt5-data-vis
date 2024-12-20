@@ -13,15 +13,13 @@ import {
   ChartOptions,
 } from "chart.js";
 
-// Configuration Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function Graph() {
-  const [chartData, setChartData] = useState<any>(null); // Pour stocker les données du graphique
+  const [chartData, setChartData] = useState<any>(null); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fonction pour récupérer les données de l'API
   useEffect(() => {
     fetch("http://localhost:8080/v1/populations")
       .then((response) => {
@@ -31,7 +29,6 @@ export default function Graph() {
         return response.json();
       })
       .then((data) => {
-        // Transformation des données pour le graphique
         const labels = data.map((item: any) => item.CommonName);
         const populations = data.map((item: any) => item.Population);
 
@@ -56,7 +53,6 @@ export default function Graph() {
       });
   }, []);
 
-  // Options du graphique
   const options: ChartOptions<"bar"> = {
     responsive: true,
     plugins: {
@@ -69,7 +65,7 @@ export default function Graph() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div style={{ height: "500px", width: "100%", textAlign: "center" }}>
+    <div style={{ height: "50%", width: "80%", margin : "auto" }}>
       {chartData ? <Bar data={chartData} options={options} /> : <p>Aucune donnée disponible</p>}
     </div>
   );
